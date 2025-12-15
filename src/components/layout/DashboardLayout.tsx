@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
-import Sidebar from './Sidebar';
+import Sidebar, { MobileHeader } from './Sidebar';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -12,12 +12,28 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuthStore();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, isLoading, router]);
+
+  // Close sidebar on window resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (isLoading) {
     return (
@@ -36,8 +52,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-[#0f0f14]">
-      <Sidebar />
-      <main className="ml-64 min-h-screen p-8">
+      <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+      <main className="pt-14 lg:pt-0 lg:ml-64 min-h-screen p-4 lg:p-8">
         {children}
       </main>
     </div>

@@ -209,3 +209,60 @@ body {
   border-radius: 4px;
   transition: width 0.5s ease;
 }
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Safe area for mobile */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch-friendly tap targets */
+@media (hover: none) and (pointer: coarse) {
+  button, a {
+    min-height: 44px;
+  }
+}
+
+/* Prevent text selection on touch */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Mobile-optimized scrolling */
+.scroll-smooth {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Grid responsive helpers */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .grid-auto-fit {
+    grid-template-columns: 1fr;
+  }
+}
